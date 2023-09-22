@@ -10,9 +10,8 @@ export const register = async (req, res) => {
   const user = req.body;
   user.password = await hashPassword(user.password);
 
-  console.log(user);
   await User.create(user);
-  delete user.password;
+
   res.status(StatusCodes.CREATED).json({ msg: 'user created' });
 };
 
