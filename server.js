@@ -5,6 +5,7 @@ import express from 'express';
 const app = express();
 import mongoose from 'mongoose';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
 import authRouter from './routes/auth.js';
 import postRouter from './routes/post.js';
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.send('homepage');

@@ -36,3 +36,12 @@ export const validateLogin = joinValidatorsWithHandler([
   body('username').notEmpty().withMessage('username is required'),
   body('password').notEmpty().withMessage('password is required'),
 ]);
+
+export const validatePostCreate = joinValidatorsWithHandler([
+  body('title')
+    .trim()
+    .isLength({ min: 3 })
+    .withMessage('title must have at least characters 3'),
+  body('content').notEmpty().withMessage('content is required'),
+  body('topic').notEmpty().withMessage('topic is required'),
+]);
