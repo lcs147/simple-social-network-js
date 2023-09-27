@@ -1,6 +1,11 @@
-import { body, validationResult } from 'express-validator';
+import { body, param, validationResult } from 'express-validator';
 import User from '../models/user.js';
-import { BadRequestError } from '../errors/customErrors.js';
+import Post from '../models/post.js';
+import {
+  BadRequestError,
+  UnauthenticatedError,
+} from '../errors/customErrors.js';
+import mongoose from 'mongoose';
 
 const joinValidatorsWithHandler = (validateValues) => {
   return [
@@ -44,4 +49,17 @@ export const validatePostCreate = joinValidatorsWithHandler([
     .withMessage('title must have at least characters 3'),
   body('content').notEmpty().withMessage('content is required'),
   body('topic').notEmpty().withMessage('topic is required'),
+]);
+
+export const validatePermissionPost = joinValidatorsWithHandler([
+  param('id').custom(async (id, { req }) => {
+    if (!mongoose.Types.ObjectId.isValid(id))
+      throw new BadRequestError('invalid post id');
+
+    const post = await Post.findById(id);
+    if (!post) throw new BadRequestError(`no post with id: ${id}`);
+
+    if (post.createdBy != req.user.id)
+      throw new UnauthenticatedError('not authorized to access this route');
+  }),
 ]);

@@ -40,3 +40,14 @@ export const search = async (req, res) => {
     .status(StatusCodes.OK)
     .json({ numPosts, numPages, currentPage: page, posts });
 };
+
+export const deletePost = async (req, res) => {
+  const deletedPost = await Post.findByIdAndDelete(req.params.id);
+  res.status(StatusCodes.OK).json({ msg: 'post deleted', deletedPost });
+};
+export const updatePost = async (req, res) => {
+  const newPost = await Post.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.status(StatusCodes.OK).json({ msg: 'post deleted', newPost });
+};
